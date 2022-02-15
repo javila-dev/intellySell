@@ -1,0 +1,34 @@
+<div class="modal fade" id="modalEscogerTercero" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel"><i class="fas fa-users"></i> Escoger Tercero</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class='table-responsive'>
+                <table id='tablaEscogerTercero' class='display' style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th class='text-center'>Cedula</th>
+                            <th class='text-center'>Nombre</th>
+                            <th class='text-center'>Celular</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for tercero in terceros%}
+                        <tr>
+                            <td class='text-center'>{{tercero.pk}}</td>
+                            <td >{{tercero.nombre}}</td>
+                            <td class='text-center'>{{tercero.celular}}</td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

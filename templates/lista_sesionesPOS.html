@@ -1,0 +1,62 @@
+{%extends 'base.html'%}
+{%load crispy_forms_tags%}
+{%block title%}Listado Sesiones POS{%endblock%}
+{%block content%}
+<div class='container-fluid bg-white shadow rounded' style='padding: 1rem;margin-top: 1rem;'>
+    <h4><i class="fas fa-stream"></i> Listado de Sesiones POS
+        <button type='button' class='btn btn-outline-primary float-right' style='margin-right: 1rem;'><i
+                class="far fa-file-excel"></i> Exportar</button></h4>
+    <br>
+    <div class='table-responsive'>
+        <table id='tablatickets' class='striped hover compact row-border' style='width: 100%;'>
+            <thead>
+                <tr>
+                    <th class='text-center'>Sesion</th>
+                    <th class='text-center'>Apertura</th>
+                    <th class='text-center'>Usuario</th>
+                    <th class='text-center'>Cierre</th>
+                    <th class='text-center'>Usuario</th>
+                    <th class='text-center'>Base</th>
+                    <th class='text-center'>Ventas</th>
+                    <th class='text-center'>Por Cobrar</th>
+                    <th class='text-center'>Ajustes</th>
+                    <th class='text-center'>Devolucion</th>
+                    <th class='text-center'>Cartera</th>
+                    <th class='text-center'>Efectivo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for sesion in sesiones%}
+                <tr>
+                    <td class='text-center'>
+                        <a href='/ventas/sesionesPOS/productos_vendidos/{{sesion.pk}}'>{{sesion.pk}}</a></td>
+                    <td class='text-center'>{{sesion.fecha_apertura|date:"d/m/Y H:m:s"}}</td>
+                    <td class='text-center'>{{sesion.usuario_apertura}}</td>
+                    <td class='text-center'>{{sesion.fecha_cierre|date:"d/m/Y H:m:s"}}</td>
+                    <td class='text-center'>{{sesion.usuario_cierre}}</td>
+                    <td class='text-center'>{{sesion.base}}</td>
+                    <td class='text-center'>{{sesion.ventas}}</td>
+                    <td class='text-center'>{{sesion.porcobrar}}</td>
+                    <td class='text-center'>{{sesion.ajustes}}</td>
+                    <td class='text-center'>{{sesion.devoluciones}}</td>
+                    <td class='text-center'>{{sesion.cartera_pagada}}</td>
+                    <td class='text-center'>{{sesion.efectivo_sesion}}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        var tablatickets = $('#tablatickets').DataTable({
+            'lengthMenu': [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'Todos']
+            ],
+            "pageLength": 25,
+            "order": [[ 1, "desc" ]]
+        })
+    })
+</script>
+{%endblock%}

@@ -1,0 +1,49 @@
+<div class="modal fade" id="modalCobrarTicket" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tituloCobrar">
+              <i class="fas fa-check-double"></i> Cobrar Ticket</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class='input-group'>
+                <div class='input-group-prepend'>
+                    <span class='input-group-text' style='min-width:7rem;' id='titCobrar'>A cobrar</span>
+                </div>
+                <input type='number' class='form-control text-center' id='totalCobro' name='totalCobro' min="1" readonly>
+            </div>
+            <br>
+            <div class='input-group'>
+                <div class='input-group-prepend'>
+                    <span class='input-group-text' style='min-width:7rem;' id='titEntregado'>Entregado</span>
+                </div>
+                <input type='number' class='form-control text-center' id='dineroEntregado' name='dineroEntregado' min='0'>
+            </div>
+            <br>
+            <div class='input-group' id='block-devolver'>
+                <div class='input-group-prepend'>
+                    <span class='input-group-text' style='min-width:7rem;'>A Devolver</span>
+                </div>
+                <input type='number' class='form-control text-center' id='aDevolver' name='aDevolver' readonly>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type='submit' class='btn btn-outline-success float-right' id='btnCobrarTicket' name='btnCobrarTicket' value="Cobrar">
+            
+        </div>
+      </div>
+    </div>
+</div>
+<script>
+    $('#totalCobro').val(0)
+    $('#dineroEntregado').val(0)
+    $('#aDevolver').val(0)
+    $('#dineroEntregado').on('change',function(){
+        var cobro = $('#totalCobro').val()
+        var devolver = $(this).val()-cobro
+        $('#aDevolver').val(devolver)
+    })
+</script>

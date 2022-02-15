@@ -1,0 +1,69 @@
+{%extends 'base.html'%}
+{%load crispy_forms_tags%}
+{%block title%}Listado Terceros{%endblock%}
+{%block content%}
+<div class='container-lg bg-white shadow rounded'>
+    <h4><i class="fas fa-users"></i> Listado de Terceros
+        
+        <button type='button' class='btn btn-outline-success float-right' style='margin-right: 1rem;'><i
+                class="far fa-file-excel"></i> Exportar</button></h4>
+    <br>
+    <div class='table-responsive'>
+        <table id='tablaTerceros' class='striped hover compact row-border' style='width: 100%;'>
+            <thead>
+                <tr>
+                    <th class='text-center'>Cedula</th>
+                    <th class='text-center'>Nombre</th>
+                    <th class='text-center'>Celular</th>
+                    <th class='text-center'>Telefono</th>
+                    <th class='text-center'>Direccion</th>
+                    <th class='text-center'>Tipo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for tercero in terceros%}
+                <tr>
+                    <td class='text-center'>
+                        <a href='#' data-toggle='modal' data-target='#modalTerceros' data-cedula='{{tercero.pk}}'
+                            data-nombre='{{tercero.nombre}}' data-cel='{{producto.celular}}' data-tel='{{producto.telefono}}'
+                            data-direccion='{{tercero.direccion}}' data-tipo='{{tercero.tipo.capitalize}}'>
+                            {{tercero.pk}}
+                        </a></td>
+                    <td>{{tercero.nombre}}</td>
+                    <td class='text-center'>{{tercero.celular}}</td>
+                    <td class='text-center'>{{tercero.telefono}}</td>
+                    <td class='text-center'>{{tercero.direccion}}</td>
+                    <td class='text-center'>{{tercero.tipo.capitalize}}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>
+{%include 'modal_terceros.html'%}
+<script>
+    var tablaTerceros = $('#tablaTerceros').DataTable({
+        'lengthMenu': [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'Todos']
+            ],
+            "pageLength": 25,
+    })
+    $('#modalTerceros').on('show.bs.modal',function(event){
+        var button = $(event.relatedTarget);
+        var cc = button.data('cedula')
+        var nombre = button.data('nombre')
+        var cel = button.data('cel')
+        var tel = button.data('tel')
+        var dir = button.data('direccion')
+        var tipo = button.data('tipo')
+        $('#id_Identificacion').val(cc)
+        $('#id_Tipo').val(tipo)
+        $('#id_Nombre').val(nombre)
+        $('#id_Direccion').val(dir)
+        $('#id_Telefono_1').val(cel)
+        $('#id_Telefono_2').val(tel)
+    })
+    $('#id_Identificacion').prop('readonly',true)
+</script>
+{%endblock%}

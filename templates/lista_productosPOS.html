@@ -1,0 +1,42 @@
+{%extends 'base.html'%}
+{%load l10n%}
+{%load crispy_forms_tags%}
+{%block title%}Listado Terceros{%endblock%}
+{%block content%}
+<div class='container-lg bg-white shadow rounded'>
+    <h4><i class="fas fa-list-ol"></i> Lista Productos sesion POS Nº {{sesion}}
+        
+        <button type='button' class='btn btn-outline-success float-right' style='margin-right: 1rem;'><i
+                class="far fa-file-excel"></i> Exportar</button></h4>
+    <br>
+    <div class='table-responsive'>
+        <table id='tablaHistory' class='striped hover compact row-border' style='width: 100%;'>
+            <thead>
+                <tr>
+                    <th class='text-center'>Codigo</th>
+                    <th class='text-center'>Producto</th>
+                    <th class='text-center'>Cantidad</th>
+                    <th class='text-center'>Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for producto in productos%}
+                <tr>
+                    <td class='text-center'>{{producto.producto|unlocalize}}</td>
+                    <td>{{producto.nombre}}</td>
+                    <td class='text-center'>{{producto.cantidad}}</td>
+                    <td class='text-center'>${{producto.valor}}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+    var tablaHistory=$('#tablaHistory').DataTable({
+        "order": [[ 1, "desc" ]]
+    })
+</script>
+{%endblock%}

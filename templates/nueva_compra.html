@@ -1,0 +1,178 @@
+{%extends 'base.html'%}
+{%load crispy_forms_tags%}
+{%load static%}
+
+{%block title%}Nueva compra{%endblock%}
+
+{%block content%}
+<div class='container-lg bg-white rounded shadow' style='padding:1rem;padding-bottom: 3rem;'>
+    <h4 class='border-bottom border-gray'><i class="fas fa-boxes"></i>
+    {%if modificar%}
+    Modificar compra
+    {%else%}
+    Registrar compra
+    {%endif%}
+    </h4>
+
+    <br>
+    <form method="POST" action="">{%csrf_token%}
+        <div class='row'>
+            <div class='col-lg-2 col-xs-12'>
+                <label for='proveedorId'>Id Proveedor*</label>
+                <div class='input-group'>
+                    <input class='form-control' type='text' id='proveedorId' name='proveedorId' readonly required>
+                    <div class='input-group-append'>
+                        <button class='btn btn-outline-secondary' id='buscarProveedor' 
+                        data-toggle="modal" data-target='#modalEscogerTercero'><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class='col-lg-5 col-xs-12'>
+                <label for='proveedorId'>Nombre Proveedor*</label>
+                <input type='text' name='nombreProveedor' id='nombreProveedor' class='form-control' readonly>
+            </div>
+            <div class='col-lg-2 col-xs-12'>
+                {{form.nroFactura|as_crispy_field}}
+            </div>
+            <div class='col-lg-3 col-xs-12'>
+                {{form.Fecha_Factura|as_crispy_field}}
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col-lg-10 col-xs-12'>
+                <p class='lead border-bottom border-gray'>Detalle Productos</p>
+            </div>
+            <div class='col-lg-2 col-xs-12'>
+                <div class='btn-group float-right'>
+                    <button type='button' class='btn btn-outline-primary ' id='btnNuevoProducto'
+                    data-toggle="modal" data-target='#modalNuevoProducto'><i class="fas fa-file"></i></button>
+                    <button type='button' class='btn btn-outline-success' id='btnAgregarProducto'
+                    data-toggle='modal' data-target='#modalEscogerProducto'><i class="fas fa-plus-circle"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class='table-responsive'>
+            <table id='tablaProductosCompra' class='table table-sm table-hover'>
+                <thead class='thead thead-dark'>
+                    <tr>
+                        <th style='width: 5%;'></th>
+                        <th class='text-center' style='width: 10%;'>Codigo</th>
+                        <th class='text-center' style='width: 35%;'>Descripcion</th>
+                        <th class='text-center' style='width: 10%;'>Cantidad</th>
+                        <th class='text-center' style='width: 10%;'>Costo</th>
+                        <th class='text-center' style='width: 10%;'>Total</th>
+                        <th class='text-center' style='width: 10%;'>Nuevo PVP</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan='3' class='text-right'>Total</th>
+                        <th id='totalCantidad' class='text-center'></th>
+                        <th id='totalCosto' class='text-center'></th>
+                        <th id='totalTotal' class='text-center'></th>
+                        <th class='text-center'></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <button type='button' class='btn btn-outline-primary float-right'
+        data-toggle="modal" data-target="#modalConfirmar">Grabar</button>
+        {%include 'modal_confirmar.html'%}
+    </form>
+</div>
+{%include 'escoger_producto.html'%}
+{%include 'escoger_tercero.html'%}
+{%include 'nuevo_producto.html'%}
+{{form.media}}
+<script src='{%static "js/nueva_compra.js"%}'></script>
+{%if modificar%}
+<script>
+    $(document).ready(function () {
+    $('#proveedorId').val('{{proveedor.pk}}')
+    $('#id_nroFactura').val('{{factura}}')
+    $('#nombreProveedor').val('{{proveedor.nombre}}')
+    var fecha = new Date('{{datos_compra.fecha|date:"c"}}')
+    fecha = moment(fecha).add(1, 'days')
+    $('#id_Fecha_Factura').datetimepicker('date', fecha)
+    var info_producto = JSON.parse('{{detalle_compra|escapejs}}')
+    for (i = 0; i < info_producto['len']; i++) {
+        var codigo = info_producto[i]['producto']
+        var descripcion = info_producto[i]['descripcion']
+        var cantidad = info_producto[i]['cantidad']
+        var costo_producto = info_producto[i]['costo']
+        var costoTotal = info_producto[i]['total']
+        var precio = info_producto[i]['precio']
+        $('#tablaProductosCompra').append(
+            $('<tr>')
+            .append(
+                $('<td>').append(
+                    $('<button>').addClass('btn btn-outline-danger borrar').attr('type', 'button').attr('id', 'eliminilarLinea')
+                    .prop('readonly', true).append('<i class="fas fa-minus-circle"></i>')
+                )
+            )
+            .append(
+                $('<td>').append(
+                    $('<input>').addClass('form-control text-center').attr('type', 'text').attr('name', 'codigoDetalle').val(codigo).prop('readonly', true)
+                )
+            )
+            .append(
+                $('<td>').append(
+                    $('<input>').addClass('form-control')
+                    .attr('type', 'text').attr('name', 'descripcionDetalle')
+                    .val(descripcion).prop('readonly', true)
+                )
+            )
+            .append(
+                $('<td>').append(
+                    $('<input>').addClass('form-control text-center')
+                    .attr('type', 'number').attr('name', 'cantidadDetalle')
+                    .attr('min', '1').val(cantidad)
+                )
+            )
+            .append(
+                $('<td>').append(
+                    $('<input>').addClass('form-control text-center')
+                    .attr('type', 'number').attr('name', 'costoDetalle').attr('min', '1')
+                    .val(costo_producto)
+                )
+            )
+            .append(
+                $('<td>').append(
+                    $('<input>').addClass('form-control text-center')
+                    .attr('type', 'number').attr('name', 'totalDetalle').attr('min', '1')
+                    .val(costoTotal).prop('readonly', true)
+                )
+            )
+            .append(
+                $('<td>').append(
+                    $('<input>').addClass('form-control text-center')
+                    .attr('type', 'number').attr('name', 'nuevoPVPDetalle').attr('min', '1')
+                    .val(precio)
+                )
+            )
+        )
+
+    }
+    totalizarCompra();
+
+    function totalizarCompra() {
+        var rows = $("#tablaProductosCompra tbody").closest('tbody')
+        var cantidadTotal = 0
+        var costoTotal = 0
+        var filas = $("#tablaProductosCompra tr").length - 2
+        for (i = 0; i < filas; i++) {
+            var fila = rows[0].childNodes[i]
+            cantidad = parseInt($(fila.childNodes[3].childNodes[0]).val())
+            costo = parseInt($(fila.childNodes[4].childNodes[0]).val())
+            cantidadTotal += cantidad
+            costoTotal += cantidad * costo
+        }
+        $('#totalCantidad').text(cantidadTotal)
+        $('#totalTotal').text("$" + new Intl.NumberFormat().format(costoTotal))
+    }
+
+})
+</script>
+{%endif%}
+{%endblock%}

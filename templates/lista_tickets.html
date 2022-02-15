@@ -1,0 +1,63 @@
+{%extends 'base.html'%}
+{%load crispy_forms_tags%}
+{%block title%}Listado Tickets{%endblock%}
+{%block content%}
+<div class='container-lg bg-white shadow rounded'>
+    <h4><i class="fas fa-stream"></i> Listado de Tickets
+        <button type='button' class='btn btn-outline-primary float-right' style='margin-right: 1rem;'><i
+                class="far fa-file-excel"></i> Exportar</button></h4>
+    <br>
+    <div class='table-responsive'>
+        <table id='tablatickets' class='striped hover compact row-border' style='width: 100%;'>
+            <thead>
+                <tr>
+                    <th class='text-center'>Nro Ticket</th>
+                    <th class='text-center'>Fecha</th>
+                    <th class='text-center'>Cliente</th>
+                    <th class='text-center'>Estado</th>
+                    <th class='text-center'>Valor</th>
+                    <th class='text-center'>Devuelto</th>
+                    <th class='text-center'>Pagado</th>
+                    <th class='text-center'>Saldo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for ticket in tickets%}
+                <tr>
+                    <td class='text-center'>
+                        <div class="dropright">
+                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ticket.pk}}
+                            </a>
+                          
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                              <a class="dropdown-item" href="/ventas/tickets/ver/{{ticket.pk}}">Ver</a>
+                              <a class="dropdown-item" href="/ventas/tickets/devolucion/{{ticket.pk}}">Devolucion</a>
+                            </div>
+                          </div>
+                    <td class='text-center'>{{ticket.fecha|date:"d/m/Y"}}</td>
+                    <td>{{ticket.cliente.nombre}}</td>
+                    <td class='text-center'>{{ticket.estado}}</td>
+                    <td class='text-center'>{{ticket.valor}}</td>
+                    <td class='text-center'>{{ticket.devolucion}}</td>
+                    <td class='text-center'>{{ticket.pagado}}</td>
+                    <td class='text-center'>{{ticket.pendiente}}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        var tablatickets = $('#tablatickets').DataTable({
+            'lengthMenu': [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'Todos']
+            ],
+            "pageLength": 25,
+            "order": [[ 1, "desc" ]]
+        })
+    })
+</script>
+{%endblock%}

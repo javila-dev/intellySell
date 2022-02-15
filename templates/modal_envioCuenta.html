@@ -1,0 +1,33 @@
+<div class="modal fade" id="modalEnviarCta" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tituloCobrar">
+            <i class="fas fa-share-square"></i> Enviar a cuenta</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class='input-group'>
+                <div class='input-group-prepend'>
+                    <span class='input-group-text' style='min-width:7rem;'>Total</span>
+                </div>
+                <input type='number' class='form-control text-center' id='totalTicketCuenta' name='totalTicketCuenta' min="1" readonly>
+            </div>
+            <br>
+            <div class='input-group'>
+                <div class='input-group-prepend'>
+                    <span class='input-group-text' style='min-width:7rem;'>Abonado</span>
+                </div>
+                <input type='number' class='form-control text-center' id='dineroAbonado' name='dineroAbonado' value="0">
+            </div>
+            <br>
+        </div>
+        <div class="modal-footer">
+            <input type='submit' class='btn btn-outline-success float-right' id='btnEnviarCta' name='btnEnviarCta' value="Enviar a cuenta">
+            
+        </div>
+      </div>
+    </div>
+</div>

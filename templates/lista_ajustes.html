@@ -1,0 +1,51 @@
+{%extends 'base.html'%}
+{%load crispy_forms_tags%}
+{%block title%}Listado Ajustes{%endblock%}
+{%block content%}
+<div class='container-lg bg-white shadow rounded'>
+    <h4><i class="fas fa-stream"></i> Listado de Ajustes
+        <button type='button' class='btn btn-outline-primary float-right' style='margin-right: 1rem;'><i
+                class="far fa-file-excel"></i> Exportar</button></h4>
+    <br>
+    <div class='table-responsive'>
+        <table id='tablatickets' class='striped hover compact row-border' style='width: 100%;'>
+            <thead>
+                <tr>
+                    <th class='text-center'>Nro Ajuste</th>
+                    <th class='text-center'>Fecha</th>
+                    <th class='text-center'>Tipo</th>
+                    <th class='text-center'>Valor</th>
+                    <th class='text-center'>Descripcion</th>
+                    <th class='text-center'>Cierre</th>
+                    <th class='text-center'>Usuario</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for ajuste in ajustes%}
+                <tr>
+                    <td class='text-center'>{{ajuste.pk}}</td>
+                    <td class='text-center'>{{ajuste.fecha|date:"d/m/Y"}}</td>
+                    <td class='text-center'>{{ajuste.tipo}}</td>
+                    <td class='text-center'>{{ajuste.valor}}</td>
+                    <td><small>{{ajuste.descripcion}}</small></td>
+                    <td class='text-center'>{{ajuste.cierre}}</td>
+                    <td class='text-center'>{{ajuste.usuario}}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        var tablatickets = $('#tablatickets').DataTable({
+            'lengthMenu': [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'Todos']
+            ],
+            "pageLength": 25,
+            "order": [[ 1, "desc" ]]
+        })
+    })
+</script>
+{%endblock%}

@@ -1,0 +1,8 @@
+Django==3.0.5
+gunicorn
+psycopg2-binary
+dj-database-url
+reportlab
+django-registration-redux==2.8
+django-crispy-forms==1.12.0
+django-tempus-dominus==5.1.2.13

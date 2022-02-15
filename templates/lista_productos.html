@@ -1,0 +1,333 @@
+{%extends 'base.html'%}
+{%load l10n%}
+{%load crispy_forms_tags%}
+{%block title%}Listado productos{%endblock%}
+{%block content%}
+<div class='container-lg bg-white shadow rounded'>
+    <h4><i class="fas fa-stream"></i> Listado de Productos {{estado}}s
+        <button type='button' class='btn btn-outline-success float-right'
+                data-toggle="modal" data-target="#modalNuevoProducto"><i class="far fa-plus-square"></i>
+            Nuevo</button>
+        <button type='button' class='btn btn-outline-primary float-right' style='margin-right: 1rem;'><i
+                class="far fa-file-excel"></i> Exportar</button></h4>
+    <br>
+    <div class='table-responsive'>
+        <table id='tablaProductos' class='striped hover compact row-border' style='width: 100%;'>
+            <thead>
+                <tr>
+                    <th class='text-center'>Codigo</th>
+                    <th class='text-center'>Codigo Alterno</th>
+                    <th class='text-center'>Descpricion</th>
+                    <th class='text-center'>Stock</th>
+                    <th class='text-center'>Precio</th>
+                    <th class='text-center'>Ubicacion</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for producto in productos%}
+                <tr>
+                    <td class='text-center'>
+                        <a href='#' data-toggle='modal' data-target='#modalOpProductos' data-codigo='{{producto.pk|unlocalize}}'
+                            data-producto='{{producto.nombre}}' data-stock='{{producto.stock}}'>
+                            {{producto.pk|unlocalize}}
+                        </a></td>
+                        <td class='text-center'>{{producto.codigoalterno}}</td>
+                        <td>{{producto.nombre}}</td>
+                    <td class='text-center'>{{producto.stock}}</td>
+                    <td class='text-center'>{{producto.precio}}</td>
+                    <td class='text-center'>{{producto.ubicacion}}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="modalOpProductos" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalOpProductosLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <nav>
+                    <div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
+                        <a class="nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-1" role="tab"
+                            aria-controls="nav-1" aria-selected="true">Detalles</a>
+                        <a class="nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-2" role="tab"
+                            aria-controls="nav-2" aria-selected="false">Ajustes</a>
+                        <a class="nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-3" role="tab"
+                            aria-controls="nav-3" aria-selected="false">Historicos</a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-1" role="tabpanel" aria-labelledby="nav-1-tab">
+                        <br>
+                        <form id='formDatosProducto' method='POST'>{%csrf_token%}
+                            <div class='row justify-content-between' style='padding-left: 15px;'>
+                                <div class='col-4 col-xs-12'>
+                                    {{form_DatosProducto.Codigo|as_crispy_field}}
+                                </div>
+                                <div class='col-3'>
+                                    {{form_DatosProducto.Stock|as_crispy_field}}
+                                </div>
+                            </div>
+                            <div class='col-lg-12 col-xs-12'>
+                                {{form_DatosProducto.Descripcion|as_crispy_field}}
+                            </div>
+                            <div class='row' style='padding-left: 15px;'>
+                                <div class='col-lg-4 col-xs-12'>
+                                    {{form_DatosProducto.Codigo_Alterno|as_crispy_field}}
+                                </div>
+                                <div class='col-lg-8 col-xs-12'>
+                                    {{form_DatosProducto.Nombre_Alterno|as_crispy_field}}
+                                </div>
+                            </div>
+                            <p class='lead border-bottom border-gray'>Precios y costos</p>
+                            <div class='row' style='padding-left: 15px;'>
+                                <div class='col-lg-5 col-xs-12'>
+                                    <div id="div_id_Costo" class="form-group">
+                                        <label for="costo" class=" requiredField">
+                                            Costo
+                                        </label>
+                                        <div class="">
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <button id='btnCosto'
+                                                        class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                                        data-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false">Tipo de Costo</button>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item" href="#"
+                                                            onclick="extraeCosto('Ultimo')">Ultimo Costo</a>
+                                                        <a class="dropdown-item" href="#"
+                                                            onclick="extraeCosto('Promedio')">Costo Promedio</a>
+                                                        <a class="dropdown-item" href="#"
+                                                            onclick="extraeCosto('Maximo')">Costo Maximo</a>
+                                                    </div>
+                                                </div>
+                                                <input type="text" class="form-control text-center" id='costo'
+                                                    readonly='true' aria-label="Text input with dropdown button">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-xs-12">
+                                    <div id="div_id_margen" class="form-group">
+                                        <label for="div_id_margen" class=" requiredField">
+                                            Margen
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="number" name="margen" min="0"
+                                                class="numberinput form-control text-center" id="margen">
+                                            <div class='input-group-append'>
+                                                <span class='input-group-text'> % </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-lg-4 col-xs-12'>
+                                    {{form_DatosProducto.Precio|as_crispy_field}}
+                                </div>
+                            </div>
+                            <p class='lead border-bottom border-gray'>Otros</p>
+                            <div class='row' style='padding-left: 15px;'>
+                                <div class='col-lg-8 col-xs-12'>
+                                    {{form_DatosProducto.Marca|as_crispy_field}}
+                                </div>
+                                <div class='col-lg-4 col-xs-12'>
+                                    {{form_DatosProducto.Ubicacion|as_crispy_field}}
+                                </div>
+                            </div>
+                            <input class='btn btn-outline-primary float-right' type='submit' name='btnguardarDatos'
+                                value='Guardar'>
+                            {%if estado == "Activo"%}
+                            <input class='btn btn-outline-danger float-right' type='submit' name='btnInactivar'
+                                value='Inactivar' style='margin-right: 1rem;'>
+                            {%else%}
+                            <input class='btn btn-outline-success float-right' type='submit' name='btnActivar'
+                                value='Activar' style='margin-right: 1rem;'>
+                            {%endif%}
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="nav-2" role="tabpanel" aria-labelledby="nav-2-tab">
+                        <form id='formAjustesInv' method='POST'>{%csrf_token%}
+                            <br>
+                            <div class='row justify-content-between'>
+                                <div class='col-4'>
+                                    {{form_AjustesInv.Codigo_ajuste|as_crispy_field}}
+                                </div>
+                                <div class='col-3'>
+                                    {{form_AjustesInv.Stock_ajuste|as_crispy_field}}
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col-4'>
+                                    {{form_AjustesInv.Tipo_ajuste|as_crispy_field}}
+                                </div>
+                                <div class='col-4'>
+                                    {{form_AjustesInv.Cantidad|as_crispy_field}}
+                                </div>
+                                <div class='col-4'>
+                                    {{form_AjustesInv.Nuevo_Stock|as_crispy_field}}
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col'>
+                                    {{form_AjustesInv.descripAjuste|as_crispy_field}}
+                                </div>
+                            </div>
+                            <input class='btn btn-outline-primary float-right' type='submit' name='btnAjustar'
+                                value='Ajustar'>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="nav-3" role="tabpanel" aria-labelledby="nav-3-tab">
+                        <br>
+                        <div class='table-responsive'>
+                            <table class='table table-sm table-hover' style='width: 100%;' id='tablaKardex'>
+                                <thead class='thead-dark'>
+                                    <tr>
+                                        <th class='text-center'>Fecha</th>
+                                        <th class='text-center'>Descripcion</th>
+                                        <th class='text-center'>Usuario</th>
+                                        <th class='text-center'>Debitos</th>
+                                        <th class='text-center'>Creditos</th>
+                                        </th>
+                                </thead>
+                                <tbody></tbody>
+                                <tfoot></tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%include 'nuevo_producto.html'%}
+
+<script>
+    $(document).ready(function () {
+        var tablaProductos = $('#tablaProductos').DataTable({
+            'lengthMenu': [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All']
+            ],
+            "pageLength": 25,
+            "order": [[ 2, "asc" ]]
+        });
+
+        $('#margen').on('change', function () {
+            cambiarMargen()
+        })
+        $('#cantidadAjuste').on('change', function () {
+            calcularNuevoStock()
+        })
+        $('#id_Tipo_ajuste').on('change', function () {
+            $('#cantidadAjuste').val(0)
+            calcularNuevoStock()
+        })
+        $('#formAjustesInv').submit(function (e) {
+            var nuevoStock = $('#nuevo_stock').val()
+            if (nuevoStock < 0) {
+                alert('El nuevo stock no puede ser menor que 0')
+                return false
+            }
+            return true
+        })
+        $('#modalOpProductos').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var nombreproducto = button.data('producto')
+            var codigo = button.data('codigo')
+            var stock = button.data('stock')
+            var modal = $(this)
+            modal.find('.modal-title').text('')
+            modal.find('.modal-title').append('<i class="fas fa-box"></i> ' + nombreproducto)
+            $('#codigo').val(codigo)
+            $('#codigoAjuste').val(codigo)
+            $('#descripcion').val(nombreproducto)
+            $('#stock').val(stock)
+            $('#stockAjuste').val(stock)
+            $.ajax({
+                type: 'GET',
+                url: '/productos/todos/{{estado}}',
+                data: {
+                    'call': 'data_productos',
+                    'codigo': codigo,
+                },
+                success: function (response) {
+                    var instance = JSON.parse(response['data'])
+                    var kardex = response['kardex']
+                    var datos = instance[0]['fields']
+                    $('#nombre_alterno').val(datos['nombrealterno'])
+                    $('#codigo_alterno').val(datos['codigoalterno'])
+                    $('#precio').val(datos['precio'])
+                    $('#ubicacion').val(datos['ubicacion'])
+                    $('#marca').val(datos['marca'])
+                    extraeCosto('ultimo')
+                    calcularNuevoStock()
+                    tablaKardex(kardex)
+                }
+            })
+
+        });
+    });
+
+    function extraeCosto(tipo) {
+        var codigo = $('#codigo').val()
+        var precio = $('#precio').val()
+        $.ajax({
+            type: 'GET',
+            url: '/productos/todos/{{estado}}',
+            data: {
+                'call': 'costo_producto',
+                'tipo': tipo,
+                'codigo': codigo,
+            },
+            success: function (response) {
+                var costo = response['costo']
+                $('#costo').val(costo)
+                var margen = (precio - costo) * 100 / precio
+                $('#margen').val(Math.round(margen))
+            }
+        })
+        $('#btnCosto').text(tipo)
+    }
+
+    function cambiarMargen() {
+        var costo = parseInt($('#costo').val())
+        var margen = $('#margen').val() / 100
+        var precio = Math.round(costo * (1 + margen), 100)
+        $('#precio').val(precio)
+    }
+
+    function calcularNuevoStock() {
+        var stockActual = parseInt($('#stockAjuste').val())
+        var ajuste = parseInt($('#cantidadAjuste').val())
+        var tipo = $('#id_Tipo_ajuste').val()
+        if (tipo == 'Debito') {
+            var nuevoStock = stockActual + ajuste
+        } else {
+            var nuevoStock = stockActual - ajuste
+        }
+        $('#nuevo_stock').val(nuevoStock)
+    }
+
+    function tablaKardex(objKardex) {
+        $('#tablaKardex tbody tr').remove();
+        for (i = 0; i < objKardex.length; i++) {
+            var tr = $('<tr>')
+            tr.append("<td class='text-center'>" + objKardex[i]['fecha'] + "</td>")
+            tr.append("<td>" + objKardex[i]['descripcion'] + "</td>")
+            tr.append("<td class='text-center'>" + objKardex[i]['usuario'] + "</td>")
+            tr.append("<td class='text-center'>" + objKardex[i]['debitos'] + "</td>")
+            tr.append("<td class='text-center'>" + objKardex[i]['creditos'] + "</td>")
+            $('#tablaKardex').append(tr)
+
+        }
+    }
+</script>
+{%endblock%}

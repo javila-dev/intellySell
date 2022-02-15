@@ -1,0 +1,67 @@
+{%extends 'base.html'%}
+{%block title%}intellysell{%endblock%}
+{%block content%}
+<style>
+    p{
+        margin-bottom: 0;
+    }
+</style>
+<div class='container-lg'>
+    <div class='row'>
+        <div class='col-lg-8 col-xs-12'>
+            <div class="jumbotron">
+                <h1 class="display-4">Hola {{request.user.first_name}}!</h1>
+                <p class="lead"><strong>Estado sesion POS:</strong> <small>{{sesionPOS}}</small></p>
+                <p class="lead"><strong>Compras por aprobar:</strong> <small>{{compras_sin_aprobar}}</small></p>
+                <p class="lead"><strong>Tickets sin terminar:</strong> <small>{{sin_terminar}}</small></p>
+                <hr class="my-4">
+                <h5>TodoRepuestos Los Laureles
+                </h5>
+                <p class='lead'><strong>Ultimas Acciones:</strong></p>
+                <ul>
+                    {%for accion in ultimasAcciones%}
+                    <li>{{accion.usuario}} {{accion.accion}} el {{accion.fecha|date:"d/m/Y"}}</li>
+                    {%endfor%}
+                </ul>
+            </div>
+        </div>
+        <div class='col-lg-4 col-xs-12'>
+            <div class="list-group">
+                {%for cliente in clientes%}
+                <a href="#" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">{{cliente.nombre.upper}}</h6>
+                        <small>{{cliente.ultimacompra}}</small>
+                    </div>
+                    <p class="mb-1">Saldo pendiente: 
+                    <small> ${{cliente.saldo}}</small></p>
+                </a>
+                {%endfor%}
+                <div>
+                </div>
+            </div>
+            <br>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-end">
+                    {% if clientes.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ clientes.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    {%for page in clientes.paginator.page_range%}
+                    <li class="page-item"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+                    {%endfor%}
+                    {% if clientes.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ clientes.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+              </nav>
+        </div>
+    </div>
+    {%endblock%}

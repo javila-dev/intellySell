@@ -1,0 +1,39 @@
+{%extends 'base.html'%}
+{%block title%}Abrir sesion POS{%endblock%}
+{%block content%}
+<form method='POST' action=''>{%csrf_token%}
+  <div class="modal fade" id="modalAbrirSesionPOS" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel"><i class="fas fa-folder-plus"></i> Abrir sesion POS</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <p class='text-justify'>Vas a abrir una <strong>nueva sesion POS</strong>, asegurate de no tener ninguna sesion abierta antes de crear una nueva.</p>
+            <div class="row justify-content-md-center">
+              <div col='col-lg-6 col-xs-12'>
+                <div class='input-group'>
+                  <div class='input-group-prepend'>
+                    <span class='input-group-text'>Base</span>  
+                  </div>
+                  <input type='number' class='form-control text-center' id='base' name='base'>
+                </div>
+              </div>
+            </div>
+            
+        </div>
+        <div class="modal-footer">
+            <button type='submit' class='btn btn-outline-success float-right' id='aperturar'>Abrir Sesion</button>
+        </div>
+      </div>
+    </div>
+</div>
+</form>
+
+<script>
+  $('#modalAbrirSesionPOS').modal('show')
+</script>
+{%endblock%}

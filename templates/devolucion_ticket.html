@@ -1,0 +1,250 @@
+{%extends 'base.html'%}
+{%load crispy_forms_tags%}
+{%load l10n%}
+{%load static%}
+{%block title%}Ventas POS{%endblock%}
+{%block content%}
+<form method='POST' action=''>{%csrf_token%}
+    <div class='container-lg bg-white shadow rounded'>
+        <div class='row justify-content-between'>
+            <div class='col-lg-4 col-xs-12'>
+                <h3><i class="fas fa-cash-register"></i> Ventas POS</h3>
+            </div>
+            <div class='col-lg-3 col-xs-12'>
+                <div class='input-group'>
+                    <div class='input-group-prepend'>
+                        <span class='input-group-text'>Nro Ticket</span>
+                    </div>
+                    <input type='text' class='form-control text-center' id='nroTicket' name='nroTicket' readonly>
+                </div>
+                <script>$('#nroTicket').val('{{nroticket|unlocalize}}')</script>
+            </div>
+        </div>
+        <br>
+        <div class="row" style='padding-left:1rem;padding-right: 1rem;'>
+            <div class='col-lg-3 col-md-4 col-xs-12' style='padding: 0.5rem;'>
+                <div class='bg-dark shadow-sm rounded'>
+                    <div class='row' style='padding-top: 0.5rem;'>
+                        <div class='col-6'>
+                            <p class='lead text-light text-right'><strong>Pagado:</strong></p>
+                        </div>
+                        <div class='col-6'>
+                            <p class='lead text-light' id='pagadoTicket'>$0</p>
+                        </div>
+                    </div>
+                    <div class='row' style='padding-top: 0.5rem;'>
+                        <div class='col-6'>
+                            <p class='lead text-light text-right'><strong>Total Ticket:</strong></p>
+                        </div>
+                        <div class='col-6'>
+                            <p class='lead text-light' id='totalTicket'>$0</p>
+                        </div>
+                    </div>
+                    
+                    <div class='row'>
+                        <div class='col-6'>
+                            <p class='lead text-light text-right'><strong>Nº Articulos:</strong></p>
+                        </div>
+                        <div class='col-6'>
+                            <p class='lead text-light' id='totalArticulos'>0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class='bg-light shadow-sm rounded' style='margin-top: 1rem;padding-bottom:0.5rem;'>
+                    <div class='row' style='margin:0;padding-top: 0.5rem;'>
+                        <div class='col-12'>
+                            <button class='btn btn-block btn-secondary' type='button' id='AgregarArticulo'
+                                    data-toggle='modal' data-target='#modalEscogerProducto' disabled>Agregar Articulo</button> 
+                        </div>
+                    </div>
+                    <div class='row' style='margin:0;padding-top: 0.5rem;'>
+                        <div class='col-6'>
+                            <button class='btn btn-block btn-outline-secondary' type='button' id='DejarPendiente'
+                            onclick="dejarPendiente()" disabled>Dejar Pendiente</button> 
+                        </div>
+                        <div class='col-6'>
+                            <button class='btn btn-block btn-secondary' type='button' id='RecuperarTicket'
+                            data-toggle='modal' data-target='#modalTicketsPdtes' disabled>Recuperar Ticket</button> 
+                        </div>
+                    </div>
+                    <div class='row' style='margin:0;padding-top: 0.5rem;'>
+                        <div class='col-6'>
+                            <button class='btn btn-block btn-secondary' type='button' id='EnviarCuenta'
+                            onclick="enviarCuenta()" disabled>Enviar a Cuenta</button> 
+                        </div>
+                        <div class='col-6'>
+                            <button class='btn btn-block btn-outline-secondary' type='button' id='AnularTicket'
+                            onclick="anularTicket()" disabled>Anular Ticket</button> 
+                        </div>
+                    </div>
+                    <div class='row' style='margin:0;padding-top: 0.5rem;'>
+                        
+                        <div class='col-12'>
+                            <button class='btn btn-block btn-secondary' type='button' id='CobrarTicket'
+                            onclick="Cobrar()">Devolucion</button> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='col-lg-9 col-md-8 col-xs-12' style='padding: 0.5rem;'>
+                <div class='row'>
+                    <div class='col-lg-5 col-xs-12'>
+                        <div class='input-group'>
+                            <div class='input-group-prepend'>
+                                <span class='input-group-text'>Cliente</span>
+                            </div>
+                            <input type='text' class='form-control text-center' id='idCliente' name='idCliente' readonly>
+                            <div class='input-group-append'>
+                                <button type='button' class='btn btn-outline-secondary' id='btnBuscarCliente'
+                                data-toggle="modal" data-target="#modalEscogerTercero"><i class="fas fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-lg-7 col-xs-12'>
+                        <input type='text' class='form-control' id='nombreCliente' name='nombreCliente' readonly>
+                    </div>
+                </div>
+                <div class='bg-light shadow-sm rounded' style='min-height: 18.75rem;margin-top: 1rem;'>
+                    <div class='table-responsive'>
+                        <table class='table table-sm' id='tablaProductosCompra'>
+                            <thead class='thead thead-dark'>
+                                <tr>
+                                    <th style='width: 5%;'></th>
+                                    <th class='text-center' style='width: 15%;'>Codigo</th>
+                                    <th class='text-center' style='width: 40%;'>Descripcion</th>
+                                    <th class='text-center' style='width: 10%;'>Cantidad</th>
+                                    <th class='text-center' style='width: 15%;'>Precio</th>
+                                    <th class='text-center' style='width: 15%;'>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    {%include 'alertas/confirmacion.html'%}
+    {%include 'modal_cobrarticket.html'%}
+</form>
+
+{%include 'alertas/alerta_popup.html'%}
+<script>
+$(document).ready(function(){
+    var productos = JSON.parse(Array('{{productos|escapejs}}'))
+    $('#nroTicket').val('{{ticket}}')
+    $('#idCliente').val('{{obj_ticket.cliente.pk}}')
+    $('#nombreCliente').val('{{obj_ticket.cliente.nombre}}')
+    $('#pagadoTicket').text('${{pagado}}')
+    $('#aDevolver').attr('max','{{pagado|unlocalize}}')
+    $('#block-devolver').css('display','none')
+    $('#titCobrar').text('Valor')
+    $('#titEntregado').text('A devolver')
+    for (producto of productos){
+        var codigo = producto['producto']
+        var cantidad = producto['cantidad__sum']*-1
+        var precio = producto['valor']
+        if (cantidad<0){
+            AgregarProdDetalle(codigo,cantidad,precio)
+        }
+    }
+    $(this).on('submit',function(){
+        var total = $('#dineroEntregado').val()
+        var pagado = parseInt('{{pagado|unlocalize}}')
+        console.log(total*-1,pagado)
+        if (total*-1>pagado){
+            $('#modalCobrarTicket').modal('hide')
+            $('#modalAlerta').modal('show')
+            $('#tituloAlertaPopUp').text('Error')
+            $('#mensajeAlertaPopUp').text('El valor a devolver supera lo cancelado por el cliente')
+            return false
+        }
+    })
+function AgregarProdDetalle(codigo,cantidad,precio) {
+    $.ajax({
+        'type': 'GET',
+        'url': '/ajax/infoproductos',
+        'data': {
+            'producto': codigo,
+        },
+        success: function (response) {
+            var info_producto = JSON.parse(response['infoproducto'])[0]['fields']
+            var descripcion = info_producto['nombre']
+            agregarLineaProducto(codigo, descripcion, precio, cantidad)
+            totalizarTicket();
+        }
+    })
+}
+
+function totalizarTicket() {
+    var rows = $("#tablaProductosCompra tbody").closest('tbody')
+    var cantidadTotal = 0
+    var costoTotal = 0
+    var filas = $("#tablaProductosCompra tr").length - 1
+    for (i = 0; i < filas; i++) {
+        var fila = rows[0].childNodes[i]
+        cantidad = parseInt($(fila.childNodes[3].childNodes[0]).val())
+        costo = parseInt($(fila.childNodes[4].childNodes[0]).val())
+        cantidadTotal += cantidad
+        costoTotal += cantidad * costo
+    }
+    $('#totalArticulos').text(cantidadTotal)
+    $('#totalTicket').text("$" + new Intl.NumberFormat().format(costoTotal))
+    $('#totalCobro').val(costoTotal)
+    $('#totalTicketCuenta').val(costoTotal)
+    return costoTotal
+}
+
+function agregarLineaProducto(codigo, descripcion, precio, cantidad = 1) {
+    $('#tablaProductosCompra').append(
+        $('<tr>')
+        .append(
+            $('<td>').append(
+                $('<button>').addClass('btn btn-outline-danger borrar').attr('type', 'button').attr('id', 'eliminilarLinea')
+                .append('<i class="fas fa-minus-circle"></i>').attr('style', 'font-size:small')
+            )
+        )
+        .append(
+            $('<td>').append(
+                $('<input>').addClass('form-control text-center')
+                .attr('type', 'text').attr('name', 'codigoDetalle').attr('style', 'font-size:small')
+                .val(codigo).prop('readonly', true)
+            )
+        )
+        .append(
+            $('<td>').append(
+                $('<input>').addClass('form-control')
+                .attr('type', 'text').attr('name', 'descripcionDetalle').attr('style', 'font-size:small')
+                .val(descripcion).prop('readonly', true)
+            )
+        )
+        .append(
+            $('<td>').append(
+                $('<input>').addClass('form-control text-center')
+                .attr('type', 'number').attr('name', 'cantidadDetalle').attr('style', 'font-size:small')
+                .attr('min', cantidad).attr('max','-1').val(cantidad)
+            )
+        )
+        .append(
+            $('<td>').append(
+                $('<input>').addClass('form-control text-center')
+                .attr('type', 'number').attr('name', 'precioDetalle').attr('min', '1').attr('style', 'font-size:small')
+                .val(precio).prop('readonly', true)
+            )
+        )
+        .append(
+            $('<td>').append(
+                $('<input>').addClass('form-control text-center')
+                .attr('type', 'number').attr('name', 'totalDetalle').attr('min', '1').attr('style', 'font-size:small')
+                .val(precio * cantidad).prop('readonly', true)
+            )
+        )
+    )
+
+}
+
+})
+</script>
+<script src='{%static "js/pos.js"%}'></script>
+{%endblock%}

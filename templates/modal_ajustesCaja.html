@@ -1,0 +1,54 @@
+{%extends 'base.html'%}
+{%load crispy_forms_tags%}
+{%block title%}Ajustes de Caja{%endblock%}
+{%block content%}
+<form id='formAjustesCaja' action="" method='POST'>{%csrf_token%}
+    <div class="modal fade" id="modalAjustesCaja" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel"><i class="fas fa-pen-square"></i> Ajustes de Caja</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class='row justify-content-between'>
+                <div class='col-6 col-xs-12'>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <label class="input-group-text" for="inputGroupSelect01">Tipo</label>
+                    </div>
+                    <select class="custom-select" id="inputGroupSelect01" name='tipo'>
+                      <option value="Debito">Debito</option>
+                      <option value="Credito">Credito</option>
+                    </select>
+                  </div>
+                </div>  
+                <div class='col-6 col-xs-12'>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <label class="input-group-text" for="valorAjuste">Valor</label>
+                    </div>
+                    <input id='valorAjuste' name='valorAjuste' class='form-control text-center' type='number' min='1' required>
+                  </div>
+                </div>  
+              </div>
+              <div class='row'>
+                <div class='col-12'>
+                    <label for='descripcion'>Descripcion</label>
+                    <input type='text' class='form-control' id='descripcion' name='descripcion' required>
+                </div>  
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-outline-primary">Guardar</button>
+            </div>
+          </div>
+        </div>
+    </div>
+</form>
+<script>
+  $('#modalAjustesCaja').modal('show')
+</script>
+{%endblock%}

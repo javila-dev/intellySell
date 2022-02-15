@@ -1,0 +1,39 @@
+{%load l10n%}
+<div class="modal fade" id="modalTicketsPdtes" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel"><i class="far fa-pause-circle"></i> Tickets Pendientes</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class='table-responsive'>
+                <table id='tablaTicketsPdtes' class='display' style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th class='text-center'>Id Ticket</th>
+                            <th class='text-center'>Fecha</th>
+                            <th class='text-center'>Cliente</th>
+                            <th class='text-center'>Valor</th>
+                            <th class='text-center'>Usuario</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for ticket in ticketsPdtes%}
+                        <tr>
+                            <td class='text-center'>{{ticket.pk|unlocalize}}</td>
+                            <td class='text-center'>{{ticket.fecha|date:"d/m/Y"}}</td>
+                            <td>{{ticket.cliente.nombre}}</td>
+                            <td class='text-center'>{{ticket.valor}}</td>
+                            <td class='text-center'>{{ticket.usuario}}</td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

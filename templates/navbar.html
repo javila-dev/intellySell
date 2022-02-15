@@ -1,0 +1,99 @@
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">intellySell</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/welcome"><i class="fas fa-home"></i> <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Inventario
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/productos/todos/Activo">Productos Activos</a>
+            <a class="dropdown-item" href="/productos/todos/Inactivo">Productos Inactivos</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Terceros
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/terceros/nuevo">Nuevo</a>
+            <a class="dropdown-item" href="{%url 'Lista Terceros'%}">Listado de Clientes</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Compras
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{%url 'Nueva compra'%}">Ingresar compra</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/compras/todas/Pendiente">Compras sin aprobar</a>
+            <a class="dropdown-item" href="/compras/todas/Aprobado">Compras aprobadas</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{%url 'Transito compras'%}">Productos en transito</a>
+            <a class="dropdown-item disabled" href="{%url 'Nueva compra'%}">Devolucion compra</a>
+            <a class="dropdown-item disabled" href="{%url 'Nueva compra'%}">Estados de cuenta</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            POS
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{%url 'POS'%}">Nuevo Ticket POS</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{%url 'Nueva Sesion POS'%}">Abrir sesion POS</a>
+            <a class="dropdown-item" href="{%url 'Cerrar Sesion POS'%}">Cerrar sesion POS</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{%url 'Ajustes Caja'%}">Ajustes de Caja</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{%url 'Listado Tickets'%}">Lista Tickets</a>
+            <a class="dropdown-item" href="{%url 'SesionesPOS'%}">Lista sesiones POS</a>
+            <a class="dropdown-item" href="{%url 'Lista Ajustes'%}">Lista Ajustes</a>
+            
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Cartera
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{%url 'Abono a cuenta'%}">Abono a cuenta</a>
+            <a class="dropdown-item" href="{%url 'Lista Abonos'%}">Lista Abonos</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{%url 'Historyline'%}"><i class="fas fa-history"></i></a>
+        </li> 
+      </ul>
+      
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          {%if request.user.is_authenticated%}
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="far fa-user"></i>
+            {{request.user}}
+          </a>
+          <div class="dropdown-menu dropdown-menu-right">
+            <a class="dropdown-item" href="/accounts/password/change/"><i class="fas fa-key"></i></i> Cambiar contraseña</a>
+            <a class="dropdown-item" href="/admin"><i class="fas fa-users-cog"></i> Configuracion</a>
+            <a class="dropdown-item" href="/accounts/logout"><i class="fas fa-door-open"></i>Cerrar Sesion</a>
+          </div>
+          {%else%}
+          <a class="nav-link" href="/accounts/login"><i class="far fa-user"></i> Iniciar Sesion</a>
+            {%endif%}
+        </li>
+      </ul>
+      <!-- <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Buscar</button>
+      </form> -->
+      
+    </div>
+  </nav>
